@@ -2,8 +2,10 @@ package dev.luhluh.spring6webapp.bootstrap;
 
 import dev.luhluh.spring6webapp.domain.Author;
 import dev.luhluh.spring6webapp.domain.Book;
+import dev.luhluh.spring6webapp.domain.Publisher;
 import dev.luhluh.spring6webapp.repositories.AuthorRepository;
 import dev.luhluh.spring6webapp.repositories.BookRepository;
+import dev.luhluh.spring6webapp.repositories.PublisherRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +14,12 @@ public class BootstrapData implements CommandLineRunner {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    private final PublisherRepository publisherRepository;
 
-    public BootstrapData(AuthorRepository authorRepository, BookRepository bookRepository) {
+    public BootstrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     @Override
@@ -48,8 +52,23 @@ public class BootstrapData implements CommandLineRunner {
         authorRepository.save(ericSaved);
         authorRepository.save(rodSaved);
 
+        Publisher publisher = new Publisher();
+        publisher.setPublisherName("RJC Publishing Inc.");
+        publisher.setAddress("Road L");
+        publisher.setCity("Antipolo");
+        publisher.setState("Rizal");
+        publisher.setZip(1870);
+
+        Publisher publisherSaved = publisherRepository.save(publisher);
+
+        ddd.setPublisher(publisherSaved);
+        noEJB.setPublisher(publisherSaved);
+        bookRepository.save(dddSaved);
+        bookRepository.save(noEJBSaved);
+
         System.out.println("In Bootstrap");
         System.out.println("Author Count: " + authorRepository.count());
         System.out.println("Book Count: " + bookRepository.count());
+        System.out.println("Repository Count: " + publisherRepository.count());
     }
 }
